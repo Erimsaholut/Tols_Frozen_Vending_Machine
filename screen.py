@@ -9,6 +9,7 @@ LIMONLU_ICON = "limonlu_icon.png"
 BOGURTLEN_ICON = "bogurtlenli_icon.png"
 POS_ICON = "pos_cihazi.png"
 
+
 class IcecekUygulamasi(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -30,7 +31,9 @@ class IcecekUygulamasi(tk.Tk):
         self.canvas.pack()
         self.canvas.create_image(0, 0, anchor="nw", image=self.arkaplan_resmi)
 
+        self.preparing_time = 3
         self.ana_ekran()
+
     def ana_ekran(self):
         self.canvas.delete("all")
         self.canvas.create_image(0, 0, anchor="nw", image=self.arkaplan_resmi)
@@ -43,10 +46,12 @@ class IcecekUygulamasi(tk.Tk):
         )
 
         self.limonlu_buton = tk.Button(self, image=self.limonlu_icon, command=lambda: self.odeme_ekrani("Limonlu"))
-        self.bogurtlen_buton = tk.Button(self, image=self.bogurtlen_icon, command=lambda: self.odeme_ekrani("Böğürtlenli"))
+        self.bogurtlen_buton = tk.Button(self, image=self.bogurtlen_icon,
+                                         command=lambda: self.odeme_ekrani("Böğürtlenli"))
 
         self.canvas.create_window(self.ekran_genislik // 3, self.ekran_yukseklik // 3, window=self.limonlu_buton)
         self.canvas.create_window(2 * self.ekran_genislik // 3, self.ekran_yukseklik // 3, window=self.bogurtlen_buton)
+
         # Add labels for drinks
         self.canvas.create_text(
             self.ekran_genislik // 3,
@@ -62,6 +67,7 @@ class IcecekUygulamasi(tk.Tk):
             font=("Helvetica", 24, "bold"),
             fill="white"
         )
+
     def odeme_ekrani(self, icecek):
         self.canvas.delete("all")
         self.canvas.create_image(0, 0, anchor="nw", image=self.arkaplan_resmi)
@@ -128,15 +134,17 @@ class IcecekUygulamasi(tk.Tk):
         )
 
         self.progress_value = 0
+        self.progress_interval = int((self.preparing_time * 1000) / 100)
         self.bari_doldur()
 
     def bari_doldur(self):
         if self.progress_value <= 100:
             self.progress['value'] = self.progress_value
             self.progress_value += 5
-            self.after(150, self.bari_doldur)
+            self.after(self.progress_interval, self.bari_doldur)
         else:
             self.afiyet_olsun()
+
     def afiyet_olsun(self):
         self.canvas.delete("all")
         self.canvas.create_image(0, 0, anchor="nw", image=self.arkaplan_resmi)
@@ -148,6 +156,7 @@ class IcecekUygulamasi(tk.Tk):
             fill="#90EE90"
         )
         self.after(2000, self.ana_ekran)
+
 
 if __name__ == "__main__":
     app = IcecekUygulamasi()
